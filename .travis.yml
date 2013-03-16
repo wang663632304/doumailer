@@ -13,4 +13,4 @@ before_install:
 install:
   - sudo pip install python-swiftclient
 script:
-  - mvn clean install -DTRAVIS=true
+  - mvn clean compile -DTRAVIS=true
