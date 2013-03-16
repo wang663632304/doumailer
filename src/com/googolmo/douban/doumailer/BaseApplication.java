@@ -1,6 +1,7 @@
 package com.googolmo.douban.doumailer;
 
 import android.app.Application;
+import com.googolmo.douban.doumailer.data.Provider;
 
 /**
  * User: googolmo
@@ -8,9 +9,17 @@ import android.app.Application;
  * Time: 上午10:37
  */
 public class BaseApplication extends Application {
+
+    private Provider mProvider;
+
     @Override
     public void onCreate() {
         super.onCreate();
+        this.mProvider = new Provider(this);
+    }
+
+    public Provider getProvider() {
+        return this.mProvider;
     }
 
     @Override

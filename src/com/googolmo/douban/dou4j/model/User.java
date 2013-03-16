@@ -4,6 +4,8 @@
 
 package com.googolmo.douban.dou4j.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
 import com.google.gson.annotations.Expose;
 import org.json.JSONObject;
 
@@ -12,8 +14,7 @@ import org.json.JSONObject;
  * Date: 13-2-12
  * Time: 上午9:28
  */
-public class User {
-
+public class User implements Parcelable {
     @Expose private String id;
     @Expose private String uid;
     @Expose private String name;
@@ -24,6 +25,19 @@ public class User {
     @Expose private String created;
     @Expose private String desc;
     @Expose private String signature;
+
+    private User(Parcel in) {
+        this.id = in.readString();
+        this.uid = in.readString();
+        this.name = in.readString();
+        this.alt = in.readString();
+        this.avatar = in.readString();
+        this.loc = in.readString();
+        this.status = in.readString();
+        this.created = in.readString();
+        this.desc = in.readString();
+        this.signature = in.readString();
+    }
 
     public String getId() {
         return id;
@@ -105,6 +119,8 @@ public class User {
         this.signature = signature;
     }
 
+
+
     @Override
     public String toString() {
         return "User{" +
@@ -122,6 +138,32 @@ public class User {
     }
 
 
+    @Override
+    public int describeContents() {
+        return 0;
+    }
 
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(this.id);
+        dest.writeString(this.uid);
+        dest.writeString(this.name);
+        dest.writeString(this.alt);
+        dest.writeString(this.avatar);
+        dest.writeString(this.loc);
+        dest.writeString(this.status);
+        dest.writeString(this.created);
+        dest.writeString(this.desc);
+        dest.writeString(this.signature);
+    }
 
+    public static Parcelable.Creator<User> CREATOR = new Parcelable.Creator<User>() {
+        public User createFromParcel(Parcel source) {
+            return new User(source);
+        }
+
+        public User[] newArray(int size) {
+            return new User[size];
+        }
+    };
 }

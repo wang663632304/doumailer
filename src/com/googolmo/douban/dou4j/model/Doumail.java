@@ -4,6 +4,8 @@
 
 package com.googolmo.douban.dou4j.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
 import com.google.gson.annotations.Expose;
 
 /**
@@ -11,7 +13,7 @@ import com.google.gson.annotations.Expose;
  * Date: 13-2-12
  * Time: 上午9:28
  */
-public class Doumail {
+public class Doumail implements Parcelable {
 
     public static final String STATUS_READ = "R";
     public static final String STATUS_UNREAD = "U";
@@ -23,6 +25,16 @@ public class Doumail {
     @Expose private String title;
     @Expose private String published;
     @Expose private String content;
+
+    private Doumail(Parcel in) {
+
+        this.status = in.readString();
+        this.id = in.readString();
+        this.title = in.readString();
+        this.published = in.readString();
+        this.content = in.readString();
+    }
+
 
     public String getStatus() {
         return status;
@@ -79,6 +91,30 @@ public class Doumail {
     public void setContent(String content) {
         this.content = content;
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(this.status);
+        dest.writeString(this.id);
+        dest.writeString(this.title);
+        dest.writeString(this.published);
+        dest.writeString(this.content);
+    }
+
+    public static Parcelable.Creator<Doumail> CREATOR = new Parcelable.Creator<Doumail>() {
+        public Doumail createFromParcel(Parcel source) {
+            return new Doumail(source);
+        }
+
+        public Doumail[] newArray(int size) {
+            return new Doumail[size];
+        }
+    };
 
     @Override
     public String toString() {

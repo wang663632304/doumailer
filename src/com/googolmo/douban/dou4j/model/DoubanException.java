@@ -1,5 +1,6 @@
 package com.googolmo.douban.dou4j.model;
 
+import com.googolmo.douban.dou4j.http.Response;
 import org.json.JSONObject;
 
 /**
@@ -12,36 +13,27 @@ public class DoubanException extends Exception {
     private int errorCode = -1;
     private String request;
     private String msg;
-    private static final long serialVersionUID = -2623309261327598087L;
 
     public DoubanException(String msg) {
         super(msg);
     }
 
-    public DoubanException(Exception cause) {
-        super(cause);
+    public DoubanException(Response response) {
+
     }
 
-    public DoubanException(String msg, int statusCode) {
+    public DoubanException(String msg, String request, int errorCode, int statusCode) {
         super(msg);
         this.statusCode = statusCode;
+        this.msg = msg;
+        this.request = request;
+        this.errorCode = errorCode;
     }
 
-    public DoubanException(JSONObject json, int statusCode) {
-        super("\n msg:" + json.optString("msg", "") + " code:" + json.optInt("code", -1) + " request:" + json.optString("request", ""));
+    public DoubanException(String json, int statusCode) {
+
         this.statusCode = statusCode;
-        this.errorCode = json.optInt("code", -1);
-        this.msg = json.optString("msg", "");
-        this.request = json.optString("request", "");
-    }
 
-    public DoubanException(String msg, Exception cause) {
-        super(msg, cause);
-    }
-
-    public DoubanException(String msg, Exception cause, int statusCode) {
-        super(msg, cause);
-        this.statusCode = statusCode;
     }
 
     public int getStatusCode() {

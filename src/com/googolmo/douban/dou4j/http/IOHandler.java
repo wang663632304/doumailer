@@ -11,7 +11,7 @@ import java.util.List;
  */
 public abstract class IOHandler {
 
-    public abstract Response fetchData(String url, Method method, List<NameValuePair> params, String accessToken);
+    public abstract Response fetchData(String url, Method method, List<NameValuePair> params, List<NameValuePair> headers);
 
-    public abstract Response fetchDataMultipartMime(String url, String accessToken, MultipartParameter... parameters);
+    public abstract Response fetchDataMultipartMime(String url, Method method, List<NameValuePair> params, List<NameValuePair> headers, MultipartParameter... parameters);
 }

@@ -1,47 +1,67 @@
 package com.googolmo.douban.dou4j.http;
 
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.stream.JsonReader;
 import com.googolmo.douban.dou4j.model.DoubanException;
-import org.json.JSONException;
-import org.json.JSONObject;
+import com.googolmo.douban.dou4j.util.JsonUtils;
 
 import java.io.Serializable;
+import java.io.StringReader;
 
 
 public class AccessToken implements Serializable {
 
     private static final long serialVersionUID = 6986530164134648944L;
     private String accessToken;
-    private String expireIn;
+    private int expireIn = 0;
     private String refreshToken;
     private String uid;
 
     public AccessToken(Response res) throws DoubanException {
 
-        try {
-            JSONObject json = new JSONObject(res.getResponseContent());
-            accessToken = json.getString("access_token");
-            expireIn = json.getString("expires_in");
-            refreshToken = json.getString("refresh_token");
-            uid = json.getString("uid");
-        } catch (JSONException je) {
-            throw new DoubanException(je.getMessage() + ":" + res.getResponseContent(), je);
+        if (res.getResponseContent() != null) {
+            JsonReader reader = new JsonReader(new StringReader(res.getResponseContent()));
+            JsonElement element = JsonUtils.getJsonParser().parse(reader);
+            if (element != null) {
+                JsonObject object = element.getAsJsonObject();
+                JsonElement access_token_element = object.get("access_token");
+                if (access_token_element != null) {
+                    this.accessToken = access_token_element.getAsString();
+                }
+                JsonElement refresh_token_element = object.get("refresh_token");
+                if (refresh_token_element != null) {
+                    this.refreshToken = refresh_token_element.getAsString();
+                }
+
+                JsonElement expires_in_element = object.get("expires_in");
+                if (expires_in_element != null) {
+                    this.expireIn = expires_in_element.getAsInt();
+                }
+                JsonElement uid_element = object.get("uid");
+                if (uid_element != null) {
+                    this.uid = uid_element.getAsString();
+                }
+            }
+
+
+        } else {
+            throw  new DoubanException("no accesstoken");
         }
     }
 
-    AccessToken(String res) throws DoubanException, JSONException {
-        super();
-        JSONObject json = new JSONObject(res);
-        accessToken = json.getString("access_token");
-        expireIn = json.getString("expires_in");
-        refreshToken = json.getString("refresh_token");
-        uid = json.getString("uid");
+    public AccessToken(String accessToken, int expireIn, String refreshToken, String uid) {
+        this.accessToken = accessToken;
+        this.expireIn = expireIn;
+        this.refreshToken = refreshToken;
+        this.uid = uid;
     }
 
     public String getAccessToken() {
         return accessToken;
     }
 
-    public String getExpireIn() {
+    public int getExpireIn() {
         return expireIn;
     }
 
@@ -49,17 +69,12 @@ public class AccessToken implements Serializable {
         return refreshToken;
     }
 
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result
-                + ((accessToken == null) ? 0 : accessToken.hashCode());
-        result = prime * result
-                + ((expireIn == null) ? 0 : expireIn.hashCode());
-        result = prime * result
-                + ((refreshToken == null) ? 0 : refreshToken.hashCode());
-        return result;
+    public String getUid() {
+        return uid;
+    }
+
+    public void setUid(String uid) {
+        this.uid = uid;
     }
 
     @Override
@@ -76,10 +91,7 @@ public class AccessToken implements Serializable {
                 return false;
         } else if (!accessToken.equals(other.accessToken))
             return false;
-        if (expireIn == null) {
-            if (other.expireIn != null)
-                return false;
-        } else if (!expireIn.equals(other.expireIn))
+        if (expireIn != other.expireIn)
             return false;
         if (refreshToken == null) {
             if (other.refreshToken != null)
@@ -97,6 +109,14 @@ public class AccessToken implements Serializable {
                 ", refreshToken=" + refreshToken +
                 ",uid=" + uid +
                 "]";
+    }
+
+    public boolean isAvailable(){
+        if (this.accessToken == null) {
+            return false;
+        } else {
+            return true;
+        }
     }
 
 
