@@ -1,4 +1,4 @@
-package com.googolmo.douban.dou4j.http;
+package com.googolmo.douban.dou4a.http;
 
 /**
  * User: googolmo

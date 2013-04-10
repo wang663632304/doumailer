@@ -6,8 +6,8 @@ package com.googolmo.douban.doumailer.data;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import com.googolmo.douban.dou4j.Douban;
-import com.googolmo.douban.dou4j.http.AccessToken;
+import com.googolmo.douban.dou4a.Douban;
+import com.googolmo.douban.dou4a.http.AccessToken;
 import com.googolmo.douban.doumailer.Constants;
 
 import java.util.HashSet;

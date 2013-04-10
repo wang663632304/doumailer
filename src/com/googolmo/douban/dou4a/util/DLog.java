@@ -1,4 +1,4 @@
-package com.googolmo.douban.dou4j.util;
+package com.googolmo.douban.dou4a.util;
 
 import android.util.Log;
 

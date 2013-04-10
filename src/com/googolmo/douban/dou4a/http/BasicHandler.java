@@ -1,6 +1,6 @@
-package com.googolmo.douban.dou4j.http;
+package com.googolmo.douban.dou4a.http;
 
-import com.googolmo.douban.dou4j.util.Configuration;
+import com.googolmo.douban.dou4a.util.Configuration;
 import org.apache.http.NameValuePair;
 
 import java.io.BufferedOutputStream;
@@ -16,7 +16,9 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.zip.GZIPInputStream;
 
 /**
@@ -24,15 +26,86 @@ import java.util.zip.GZIPInputStream;
  * Date: 13-2-9
  * Time: 上午11:11
  */
-public class BasicHandler extends IOHandler {
-    public static final String BOUNDARYSTR = "abc123abc123defdefdef123";
+public class BasicHandler {
+    public static final String CHARSET_UTF8 = "utf-8";
+    public static final String CONTENT_TYPE_FORM_URLENCODE = "application/x-www-form-urlencoded";
+    public static final String CONNECTION_KEEPALIVE = "Keep-Alive";
+    private static boolean KEEP_ALIVE = true;
+    private static final String BOUNDARYSTR = "abc123abc123defdefdef123";
     private static final String BOUNDARY = "--" + BOUNDARYSTR + "\r\n";
+    private Map<String, String> headers;
+    private boolean useDNS;
+    private boolean useGzip;
+    private String userAgent;
+    private String acceptCharset;
+    private Method method;
+    private boolean keepAlive;
+    private String url;
+    private int connectTimeout;
+    private int readTimeout;
 
-    public BasicHandler() {
+
+    public BasicHandler(String url, Method method) {
+        this.url = url;
+        this.method = method;
+        init();
     }
 
-    @Override
-    public Response fetchData(String url, Method method, List<NameValuePair> params, List<NameValuePair> headers) {
+    private void init() {
+        this.headers = new HashMap<String, String>();
+        useDNS = false;
+        this.useGzip = true;
+        this.userAgent = "douban-api/googolmo 1.0";
+        this.acceptCharset = CHARSET_UTF8;
+        connectTimeout = 1000 * 15;
+        readTimeout = 1000 * 15;
+        keepAlive = KEEP_ALIVE;
+    }
+
+    public void setRequestProperty(String key, String value) {
+        headers.put(key, value);
+    }
+
+    public void setOAuth(String accessToken) {
+        headers.put("Authorization", "Bearer " + accessToken);
+    }
+
+    public void setUseCustomDNS(boolean value) {
+        useDNS = value;
+    }
+
+    public void setUseGzip(boolean value) {
+        this.useGzip = value;
+    }
+
+    public void setUserAgent(String userAgent) {
+        this.userAgent = userAgent;
+    }
+
+    public void setAcceptCharset(String value) {
+        this.acceptCharset = value;
+    }
+
+    public void setKeepAlive(boolean value) {
+        this.keepAlive = value;
+    }
+
+    public static void disableKeepAlive() {
+        KEEP_ALIVE = false;
+        System.setProperty("http.keepAlive", "false");
+    }
+
+    public void setReadTimeout(int value) {
+        this.readTimeout = value;
+    }
+
+    public void setConnectTimeout(int value) {
+        this.connectTimeout = value;
+    }
+
+
+
+    public Response fetchData(List<NameValuePair> params) {
         int code = 200;
 
         try {
@@ -41,21 +114,37 @@ public class BasicHandler extends IOHandler {
             connection = (HttpURLConnection) aUrl.openConnection();
             try {
 
-                connection.setConnectTimeout(Configuration.getConnectionTimeout());
-                connection.setReadTimeout(Configuration.getReadTimeout());
+                connection.setConnectTimeout(this.connectTimeout);
+                connection.setReadTimeout(this.readTimeout);
                 connection.setRequestMethod(method.name());
 
-                connection.setRequestProperty("Accept-Encoding", "gzip");
-                connection.setRequestProperty("User-Agent", Configuration.getUserAgent());
-                connection.setRequestProperty("Accept-Charset", "UTF-8");
-                connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
-                //TODO DNS解析
+                if (useGzip) {
+                    connection.setRequestProperty("Accept-Encoding", "gzip");
+                }
+                if (userAgent != null) {
+                        connection.setRequestProperty("User-Agent", userAgent);
+                }
+
+                if (acceptCharset != null) {
+                    connection.setRequestProperty("Accept-Charset", acceptCharset);
+                } else {
+                    connection.setRequestProperty("Accept-Charset", "UTF-8");
+                }
+
+                connection.setRequestProperty("Content-Type", CONTENT_TYPE_FORM_URLENCODE);
+
+                if (keepAlive) {
+                    connection.setRequestProperty("Connection", CONNECTION_KEEPALIVE);
+                }
+
                 //设置Headers
                 if (headers != null) {
-                    for (NameValuePair pair : headers) {
-                        connection.setRequestProperty(pair.getName(), pair.getValue());
+                    for (String key :headers.keySet()) {
+                        connection.setRequestProperty(key, headers.get(key));
                     }
                 }
+
+                //TODO DNS解析
 
                 connection.setDoInput(true);
                 if (method.name().equals("POST") || method.name().equals("PUT")) {
@@ -97,28 +186,42 @@ public class BasicHandler extends IOHandler {
         }
     }
 
-    @Override
-    public Response fetchDataMultipartMime(String url, Method method, List<NameValuePair> params, List<NameValuePair> headers, MultipartParameter... parameters) {
+
+    public Response fetchDataMultipartMime(List<NameValuePair> params, MultipartParameter... parameters) {
         int code = 200;
 
         try {
             URL aUrl = new URL(url);
-            HttpURLConnection connection = (HttpURLConnection)aUrl.openConnection();
-            try{
+            HttpURLConnection connection = (HttpURLConnection) aUrl.openConnection();
+            try {
                 connection.setUseCaches(false);
-                connection.setConnectTimeout(Configuration.getConnectionTimeout());
-                connection.setReadTimeout(Configuration.getReadTimeout());
+                connection.setConnectTimeout(this.connectTimeout);
+                connection.setReadTimeout(this.readTimeout);
                 connection.setRequestMethod(method.name());
 
-                connection.setRequestProperty("Accept-Encoding", "gzip");
-                connection.setRequestProperty("User-Agent", Configuration.getUserAgent());
-                connection.setRequestProperty("Accept-Charset", "UTF-8");
+                if (useGzip) {
+                    connection.setRequestProperty("Accept-Encoding", "gzip");
+                }
+                if (userAgent != null) {
+                    connection.setRequestProperty("User-Agent", userAgent);
+                }
+
+                if (acceptCharset != null) {
+                    connection.setRequestProperty("Accept-Charset", acceptCharset);
+                } else {
+                    connection.setRequestProperty("Accept-Charset", "UTF-8");
+                }
+
                 connection.setRequestProperty("Connection", "keep-alive");
+
+                if (keepAlive) {
+                    connection.setRequestProperty("Connection", "");
+                }
 
                 //设置Headers
                 if (headers != null) {
-                    for (NameValuePair pair : headers) {
-                        connection.setRequestProperty(pair.getName(), pair.getValue());
+                    for (String key : headers.keySet()) {
+                        connection.setRequestProperty(key, headers.get(key));
                     }
                 }
 
@@ -144,7 +247,7 @@ public class BasicHandler extends IOHandler {
                 length += formDataBuilder.toString().getBytes().length;
                 out.write(formDataBuilder.toString().getBytes());
 
-                for(MultipartParameter parameter : parameters) {
+                for (MultipartParameter parameter : parameters) {
                     StringBuilder formDataBuffer = new StringBuilder();
 
                     formDataBuffer.append(BOUNDARY)
@@ -162,7 +265,6 @@ public class BasicHandler extends IOHandler {
                     length += parameter.getContent().length;
 
                 }
-
 
 
                 byte[] endData = ("\r\n--" + BOUNDARYSTR + "--\r\n").getBytes();

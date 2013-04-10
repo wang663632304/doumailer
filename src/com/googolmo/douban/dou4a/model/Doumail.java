@@ -2,7 +2,7 @@
  * Copyright (c) 2013. By GoogolMo
  */
 
-package com.googolmo.douban.dou4j.model;
+package com.googolmo.douban.dou4a.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;

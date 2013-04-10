@@ -2,7 +2,7 @@
  * Copyright (c) 2013. By GoogolMo
  */
 
-package com.googolmo.douban.dou4j.util;
+package com.googolmo.douban.dou4a.util;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;

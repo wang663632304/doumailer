@@ -1,10 +1,9 @@
-package com.googolmo.douban.dou4j.http;
+package com.googolmo.douban.dou4a.http;
 
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.googolmo.douban.dou4j.model.DoubanException;
-import com.googolmo.douban.dou4j.util.DLog;
-import com.googolmo.douban.dou4j.util.JsonUtils;
+import com.googolmo.douban.dou4a.model.DoubanException;
+import com.googolmo.douban.dou4a.util.DLog;
+import com.googolmo.douban.dou4a.util.JsonUtils;
 import org.apache.http.NameValuePair;
 
 import java.io.UnsupportedEncodingException;
@@ -25,7 +24,6 @@ public class BaseApi {
     private AccessToken accessToken;
     private String token;
 
-    private IOHandler ioHandler;
 
     private Gson mGson;
     private String apiKey;
@@ -34,7 +32,6 @@ public class BaseApi {
 
     private String host;
     public BaseApi(String apiKey, String apiSecret, String callbackUrl) {
-        this.ioHandler = new BasicHandler();
         this.apiKey = apiKey;
         this.apiSecret = apiSecret;
         this.callbackUrl = callbackUrl;
@@ -45,17 +42,6 @@ public class BaseApi {
     public BaseApi(AccessToken accessToken, String apiKey, String apiSecret, String callbackUrl) {
         this.accessToken = accessToken;
         this.token = this.accessToken.getAccessToken();
-        this.ioHandler = new BasicHandler();
-        this.apiKey = apiKey;
-        this.apiSecret = apiSecret;
-        this.callbackUrl = callbackUrl;
-        init();
-    }
-
-    public BaseApi(AccessToken accessToken, String apiKey, String apiSecret, String callbackUrl, IOHandler ioHandler) {
-        this.accessToken = accessToken;
-        this.token = this.accessToken.getAccessToken();
-        this.ioHandler = ioHandler;
         this.apiKey = apiKey;
         this.apiSecret = apiSecret;
         this.callbackUrl = callbackUrl;
@@ -78,14 +64,6 @@ public class BaseApi {
     public void setAccessToken(AccessToken accessToken) {
         this.accessToken = accessToken;
         this.token = this.accessToken.getAccessToken();
-    }
-
-    public IOHandler getIoHandler() {
-        return ioHandler;
-    }
-
-    public void setIoHandler(IOHandler ioHandler) {
-        this.ioHandler = ioHandler;
     }
 
     public void setGson(Gson gson) {
@@ -153,16 +131,10 @@ public class BaseApi {
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
-        List<NameValuePair> headers = new ArrayList<NameValuePair>();
-        if (isAuth && this.token != null) {
-
-                headers.add(new RequestParameter("Authorization", "Bearer " + accessToken.getAccessToken()));
-
-        }
-        if (!isAuth) {
-            params.add(new RequestParameter("apikey", this.apiKey));
-        }
-        Response response = ioHandler.fetchData(url, Method.GET, null, headers);
+        params.add(new RequestParameter("apikey", this.apiKey));
+        BasicHandler handler = new BasicHandler(url, Method.GET);
+        handler.setOAuth(accessToken.getAccessToken());
+        Response response = handler.fetchData(null);
         if (response.getResponseCode() >= 300) {
             throw new DoubanException(response);
         }
@@ -174,16 +146,12 @@ public class BaseApi {
     }
 
     public Response post(String url, List<NameValuePair> params, boolean isAuth) throws DoubanException {
-        List<NameValuePair> headers = new ArrayList<NameValuePair>();
-        if (isAuth && this.token != null) {
-
-            headers.add(new RequestParameter("Authorization", "Bearer " + accessToken.getAccessToken()));
-
-        }
         if (!isAuth) {
             params.add(new RequestParameter("apikey", this.apiKey));
         }
-        Response response = ioHandler.fetchData(url, Method.POST, params, headers);
+        BasicHandler handler = new BasicHandler(url, Method.POST);
+        handler.setOAuth(accessToken.getAccessToken());
+        Response response = handler.fetchData(params);
         DLog.d(TAG, response.getResponseContent());
         if (response.getResponseCode() >= 300) {
             throw new DoubanException(response);
@@ -196,11 +164,11 @@ public class BaseApi {
     }
 
     public Response put(String url, List<NameValuePair> params, boolean isAuth) throws DoubanException {
-        List<NameValuePair> headers = new ArrayList<NameValuePair>();
-        if (isAuth && this.token != null) {
-            headers.add(new RequestParameter("Authorization", "Bearer " + accessToken.getAccessToken()));
-        }
-        Response response = ioHandler.fetchData(url, Method.PUT, params, headers);
+
+        BasicHandler handler = new BasicHandler(url, Method.PUT);
+        handler.setOAuth(accessToken.getAccessToken());
+        Response response = handler.fetchData(params);
+
         DLog.d(TAG, response.getResponseContent());
         if (response.getResponseCode() >= 300) {
             throw new DoubanException(response);
@@ -209,38 +177,16 @@ public class BaseApi {
     }
 
     public Response delete(String url) throws DoubanException {
-        List<NameValuePair> headers = new ArrayList<NameValuePair>();
-        if (this.token != null) {
+        BasicHandler handler = new BasicHandler(url, Method.PUT);
+        handler.setOAuth(accessToken.getAccessToken());
+        Response response = handler.fetchData(null);
 
-            headers.add(new RequestParameter("Authorization", "Bearer " + accessToken.getAccessToken()));
-
-        }
-        Response response = ioHandler.fetchData(url, Method.DELETE, null, headers);
         DLog.d(TAG, response.getResponseContent());
         if (response.getResponseCode() >= 300) {
             throw new DoubanException(response);
         }
         return response;
     }
-
-//    private String getQuery(List<NameValuePair> params) throws UnsupportedEncodingException {
-//        StringBuilder result = new StringBuilder();
-//        boolean first = true;
-//
-//        for (NameValuePair pair : params)
-//        {
-//            if (first)
-//                first = false;
-//            else
-//                result.append("&");
-//
-//            result.append(URLEncoder.encode(pair.getName(), "UTF-8"));
-//            result.append("=");
-//            result.append(URLEncoder.encode(pair.getValue(), "UTF-8"));
-//        }
-//
-//        return result.toString();
-//    }
 
 
     private String getQuery(String url, List<NameValuePair> params) throws UnsupportedEncodingException {

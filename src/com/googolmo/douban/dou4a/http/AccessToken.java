@@ -1,10 +1,10 @@
-package com.googolmo.douban.dou4j.http;
+package com.googolmo.douban.dou4a.http;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.stream.JsonReader;
-import com.googolmo.douban.dou4j.model.DoubanException;
-import com.googolmo.douban.dou4j.util.JsonUtils;
+import com.googolmo.douban.dou4a.model.DoubanException;
+import com.googolmo.douban.dou4a.util.JsonUtils;
 
 import java.io.Serializable;
 import java.io.StringReader;

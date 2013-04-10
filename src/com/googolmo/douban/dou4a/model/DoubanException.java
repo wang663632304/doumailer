@@ -1,7 +1,6 @@
-package com.googolmo.douban.dou4j.model;
+package com.googolmo.douban.dou4a.model;
 
-import com.googolmo.douban.dou4j.http.Response;
-import org.json.JSONObject;
+import com.googolmo.douban.dou4a.http.Response;
 
 /**
  * User: googolmo

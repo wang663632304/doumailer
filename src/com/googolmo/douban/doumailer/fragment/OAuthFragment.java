@@ -4,7 +4,6 @@
 
 package com.googolmo.douban.doumailer.fragment;
 
-import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -18,9 +17,9 @@ import android.view.ViewGroup;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import com.googolmo.douban.dou4j.http.AccessToken;
-import com.googolmo.douban.dou4j.model.DoubanException;
-import com.googolmo.douban.dou4j.util.DLog;
+import com.googolmo.douban.dou4a.http.AccessToken;
+import com.googolmo.douban.dou4a.model.DoubanException;
+import com.googolmo.douban.dou4a.util.DLog;
 import com.googolmo.douban.doumailer.Constants;
 import com.googolmo.douban.doumailer.MainActivity;
 import com.googolmo.douban.doumailer.R;

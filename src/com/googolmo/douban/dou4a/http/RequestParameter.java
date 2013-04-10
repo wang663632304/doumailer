@@ -2,7 +2,7 @@
  * Copyright (c) 2013. By GoogolMo
  */
 
-package com.googolmo.douban.dou4j.http;
+package com.googolmo.douban.dou4a.http;
 
 import org.apache.http.NameValuePair;
 

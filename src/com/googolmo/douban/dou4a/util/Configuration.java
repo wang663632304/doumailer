@@ -1,4 +1,4 @@
-package com.googolmo.douban.dou4j.util;
+package com.googolmo.douban.dou4a.util;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -25,36 +25,36 @@ public class Configuration {
         defaultProperty = new Properties();
 
         defaultProperty = new Properties();
-        defaultProperty.setProperty("dou4j.debug", "true");
-//        defaultProperty.setProperty("dou4j.source", Douban.CONSUMER_KEY);
-        //defaultProperty.setProperty("dou4j.clientVersion","");
-        defaultProperty.setProperty("dou4j.http.userAgent", "dou4j http://api.douban.com/ /{dou4j.clientVersion}");
-        //defaultProperty.setProperty("dou4j.user","");
-        //defaultProperty.setProperty("dou4j.password","");
-        defaultProperty.setProperty("dou4j.http.useSSL", "false");
-        //defaultProperty.setProperty("dou4j.http.proxyHost","");
-        defaultProperty.setProperty("dou4j.http.proxyHost.fallback", "http.proxyHost");
-        //defaultProperty.setProperty("dou4j.http.proxyUser","");
-        //defaultProperty.setProperty("dou4j.http.proxyPassword","");
-        //defaultProperty.setProperty("dou4j.http.proxyPort","");
-        defaultProperty.setProperty("dou4j.http.proxyPort.fallback", "http.proxyPort");
-        defaultProperty.setProperty("dou4j.http.connectionTimeout", "20000");
-        defaultProperty.setProperty("dou4j.http.readTimeout", "120000");
-        defaultProperty.setProperty("dou4j.http.retryCount", "3");
-        defaultProperty.setProperty("dou4j.http.retryIntervalSecs", "10");
-        //defaultProperty.setProperty("dou4j.oauth.consumerKey","");
-        //defaultProperty.setProperty("dou4j.oauth.consumerSecret","");
-        defaultProperty.setProperty("dou4j.async.numThreads", "1");
-//        defaultProperty.setProperty("dou4j.clientVersion", Version.getVersion());
+        defaultProperty.setProperty("dou4a.debug", "true");
+//        defaultProperty.setProperty("dou4a.source", Douban.CONSUMER_KEY);
+        //defaultProperty.setProperty("dou4a.clientVersion","");
+        defaultProperty.setProperty("dou4a.http.userAgent", "dou4a http://api.douban.com/ /{dou4a.clientVersion}");
+        //defaultProperty.setProperty("dou4a.user","");
+        //defaultProperty.setProperty("dou4a.password","");
+        defaultProperty.setProperty("dou4a.http.useSSL", "false");
+        //defaultProperty.setProperty("dou4a.http.proxyHost","");
+        defaultProperty.setProperty("dou4a.http.proxyHost.fallback", "http.proxyHost");
+        //defaultProperty.setProperty("dou4a.http.proxyUser","");
+        //defaultProperty.setProperty("dou4a.http.proxyPassword","");
+        //defaultProperty.setProperty("dou4a.http.proxyPort","");
+        defaultProperty.setProperty("dou4a.http.proxyPort.fallback", "http.proxyPort");
+        defaultProperty.setProperty("dou4a.http.connectionTimeout", "20000");
+        defaultProperty.setProperty("dou4a.http.readTimeout", "120000");
+        defaultProperty.setProperty("dou4a.http.retryCount", "3");
+        defaultProperty.setProperty("dou4a.http.retryIntervalSecs", "10");
+        //defaultProperty.setProperty("dou4a.oauth.consumerKey","");
+        //defaultProperty.setProperty("dou4a.oauth.consumerSecret","");
+        defaultProperty.setProperty("dou4a.async.numThreads", "1");
+//        defaultProperty.setProperty("dou4a.clientVersion", Version.getVersion());
         try {
             // Android platform should have dalvik.system.VMRuntime in the classpath.
             // @see http://developer.android.com/reference/dalvik/system/VMRuntime.html
             Class.forName("dalvik.system.VMRuntime");
-            defaultProperty.setProperty("dou4j.dalvik", "true");
+            defaultProperty.setProperty("dou4a.dalvik", "true");
         } catch (ClassNotFoundException cnfe) {
-            defaultProperty.setProperty("dou4j.dalvik", "false");
+            defaultProperty.setProperty("dou4a.dalvik", "false");
         }
-        DALVIK = getBoolean("dou4j.dalvik");
+        DALVIK = getBoolean("dou4a.dalvik");
 
     }
 
@@ -87,138 +87,138 @@ public class Configuration {
     }
 
     public static boolean useSSL() {
-        return getBoolean("dou4j.http.useSSL");
+        return getBoolean("dou4a.http.useSSL");
     }
     public static String getScheme(){
         return useSSL() ? "https://" : "http://";
     }
 
     public static String getCilentVersion() {
-        return getProperty("dou4j.clientVersion");
+        return getProperty("dou4a.clientVersion");
     }
 
     public static String getCilentVersion(String clientVersion) {
-        return getProperty("dou4j.clientVersion", clientVersion);
+        return getProperty("dou4a.clientVersion", clientVersion);
     }
 
     public static String getSource() {
-        return getProperty("dou4j.source");
+        return getProperty("dou4a.source");
     }
 
     public static String getSource(String source) {
-        return getProperty("dou4j.source", source);
+        return getProperty("dou4a.source", source);
     }
 
     public static String getProxyHost() {
-        return getProperty("dou4j.http.proxyHost");
+        return getProperty("dou4a.http.proxyHost");
     }
 
     public static String getProxyHost(String proxyHost) {
-        return getProperty("dou4j.http.proxyHost", proxyHost);
+        return getProperty("dou4a.http.proxyHost", proxyHost);
     }
 
     public static String getProxyUser() {
-        return getProperty("dou4j.http.proxyUser");
+        return getProperty("dou4a.http.proxyUser");
     }
 
     public static String getProxyUser(String user) {
-        return getProperty("dou4j.http.proxyUser", user);
+        return getProperty("dou4a.http.proxyUser", user);
     }
 
     public static String getClientURL() {
-        return getProperty("dou4j.clientURL");
+        return getProperty("dou4a.clientURL");
     }
 
     public static String getClientURL(String clientURL) {
-        return getProperty("dou4j.clientURL", clientURL);
+        return getProperty("dou4a.clientURL", clientURL);
     }
 
     public static String getProxyPassword() {
-        return getProperty("dou4j.http.proxyPassword");
+        return getProperty("dou4a.http.proxyPassword");
     }
 
     public static String getProxyPassword(String password) {
-        return getProperty("dou4j.http.proxyPassword", password);
+        return getProperty("dou4a.http.proxyPassword", password);
     }
 
     public static int getProxyPort() {
-        return getIntProperty("dou4j.http.proxyPort");
+        return getIntProperty("dou4a.http.proxyPort");
     }
 
     public static int getProxyPort(int port) {
-        return getIntProperty("dou4j.http.proxyPort", port);
+        return getIntProperty("dou4a.http.proxyPort", port);
     }
 
     public static int getConnectionTimeout() {
-        return getIntProperty("dou4j.http.connectionTimeout");
+        return getIntProperty("dou4a.http.connectionTimeout");
     }
 
     public static int getConnectionTimeout(int connectionTimeout) {
-        return getIntProperty("dou4j.http.connectionTimeout", connectionTimeout);
+        return getIntProperty("dou4a.http.connectionTimeout", connectionTimeout);
     }
 
     public static int getReadTimeout() {
-        return getIntProperty("dou4j.http.readTimeout");
+        return getIntProperty("dou4a.http.readTimeout");
     }
 
     public static int getReadTimeout(int readTimeout) {
-        return getIntProperty("dou4j.http.readTimeout", readTimeout);
+        return getIntProperty("dou4a.http.readTimeout", readTimeout);
     }
 
     public static int getRetryCount() {
-        return getIntProperty("dou4j.http.retryCount");
+        return getIntProperty("dou4a.http.retryCount");
     }
 
     public static int getRetryCount(int retryCount) {
-        return getIntProperty("dou4j.http.retryCount", retryCount);
+        return getIntProperty("dou4a.http.retryCount", retryCount);
     }
 
     public static int getRetryIntervalSecs() {
-        return getIntProperty("dou4j.http.retryIntervalSecs");
+        return getIntProperty("dou4a.http.retryIntervalSecs");
     }
 
     public static int getRetryIntervalSecs(int retryIntervalSecs) {
-        return getIntProperty("dou4j.http.retryIntervalSecs", retryIntervalSecs);
+        return getIntProperty("dou4a.http.retryIntervalSecs", retryIntervalSecs);
     }
 
     public static String getUser() {
-        return getProperty("dou4j.user");
+        return getProperty("dou4a.user");
     }
 
     public static String getUser(String userId) {
-        return getProperty("dou4j.user", userId);
+        return getProperty("dou4a.user", userId);
     }
 
     public static String getPassword() {
-        return getProperty("dou4j.password");
+        return getProperty("dou4a.password");
     }
 
     public static String getPassword(String password) {
-        return getProperty("dou4j.password", password);
+        return getProperty("dou4a.password", password);
     }
 
     public static String getUserAgent() {
-        return getProperty("dou4j.http.userAgent");
+        return getProperty("dou4a.http.userAgent");
     }
 
     public static String getUserAgent(String userAgent) {
-        return getProperty("dou4j.http.userAgent", userAgent);
+        return getProperty("dou4a.http.userAgent", userAgent);
     }
 
     public static String getOAuthConsumerKey() {
-        return getProperty("dou4j.oauth.consumerKey");
+        return getProperty("dou4a.oauth.consumerKey");
     }
 
     public static String getOAuthConsumerKey(String consumerKey) {
-        return getProperty("dou4j.oauth.consumerKey", consumerKey);
+        return getProperty("dou4a.oauth.consumerKey", consumerKey);
     }
 
     public static String getOAuthConsumerSecret() {
-        return getProperty("dou4j.oauth.consumerSecret");
+        return getProperty("dou4a.oauth.consumerSecret");
     }
 
     public static String getOAuthConsumerSecret(String consumerSecret) {
-        return getProperty("dou4j.oauth.consumerSecret", consumerSecret);
+        return getProperty("dou4a.oauth.consumerSecret", consumerSecret);
     }
 
     public static boolean getBoolean(String name) {
@@ -302,11 +302,11 @@ public class Configuration {
     }
 
     public static int getNumberOfAsyncThreads() {
-        return getIntProperty("dou4j.async.numThreads");
+        return getIntProperty("dou4a.async.numThreads");
     }
 
     public static boolean getDebug() {
-        return getBoolean("dou4j.debug");
+        return getBoolean("dou4a.debug");
 
     }
 }

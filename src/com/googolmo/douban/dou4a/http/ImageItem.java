@@ -1,10 +1,4 @@
-package com.googolmo.douban.dou4j.http;
-
-import java.io.IOException;
-
-
-
-import com.googolmo.douban.dou4j.model.DoubanException;
+package com.googolmo.douban.dou4a.http;
 
 /**
  * 临时存储上传图片的内容，格式，文件信息等
